@@ -1,0 +1,120 @@
+{
+  "files" : [ {
+    "remoteURL" : "https://github.com/ideashatch/HUB-8735/raw/main/amebapro2_arduino/Arduino_package/ideasHatch.json",
+    "localPath" : "C:\\BlocklyduinoF2\\arduino-1.8.19\\portable\\cache\\github.com\\ideashatch\\HUB-8735\\raw\\main\\amebapro2_arduino\\Arduino_package\\ideasHatch.json",
+    "eTag" : "71910e603464ec77c44f0b766376e0f6e3db6ba96863af33d6063e82d19fe68a",
+    "md5" : "MD5:cb5848d483ddc6fc6a3597ffbee6b7e8",
+    "createdAt" : "2025-11-11T11:15:16.991",
+    "cacheControl" : {
+      "maxAge" : 300,
+      "mustRevalidate" : false,
+      "noStore" : false,
+      "noCache" : false
+    },
+    "expires" : "2025-11-11T11:20:16.991"
+  }, {
+    "remoteURL" : "https://arduino.esp8266.com/stable/package_esp8266com_index.json",
+    "localPath" : "C:\\BlocklyduinoF2\\arduino-1.8.19\\portable\\cache\\arduino.esp8266.com\\stable\\package_esp8266com_index.json",
+    "eTag" : "6418dd84-2c51e",
+    "md5" : "MD5:2ac244743dae55f1459223f40ec0e862",
+    "createdAt" : "2025-11-11T11:08:15.428",
+    "cacheControl" : {
+      "maxAge" : 600,
+      "mustRevalidate" : false,
+      "noStore" : false,
+      "noCache" : false
+    },
+    "expires" : "2025-11-11T11:18:15.428"
+  }, {
+    "remoteURL" : "https://raw.githubusercontent.com/digistump/arduino-boards-index/master/package_digistump_index.json",
+    "localPath" : "C:\\BlocklyduinoF2\\arduino-1.8.19\\portable\\cache\\raw.githubusercontent.com\\digistump\\arduino-boards-index\\master\\package_digistump_index.json",
+    "eTag" : "3009e1bba719e09eddff682075ef35d04153edb11434f8ea074cd562e9955fb6",
+    "md5" : "MD5:c43814fed1b4ea761ebe078a082d2d51",
+    "createdAt" : "2025-11-11T11:15:19.728",
+    "cacheControl" : {
+      "maxAge" : 300,
+      "mustRevalidate" : false,
+      "noStore" : false,
+      "noCache" : false
+    },
+    "expires" : "2025-11-11T11:20:19.728"
+  }, {
+    "remoteURL" : "https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json",
+    "localPath" : "C:\\BlocklyduinoF2\\arduino-1.8.19\\portable\\cache\\sandeepmistry.github.io\\arduino-nRF5\\package_nRF5_boards_index.json",
+    "eTag" : "65b507c7-4756",
+    "md5" : "MD5:03f885a2a16b464b918275f33d2db534",
+    "createdAt" : "2025-11-11T11:08:16.527",
+    "cacheControl" : {
+      "maxAge" : 600,
+      "mustRevalidate" : false,
+      "noStore" : false,
+      "noCache" : false
+    },
+    "expires" : "2025-11-11T11:18:16.527"
+  }, {
+    "remoteURL" : "https://raw.githubusercontent.com/ambiot/ambpro2_arduino/dev/Arduino_package/package_realtek_amebapro2_early_index.json",
+    "localPath" : "C:\\BlocklyduinoF2\\arduino-1.8.19\\portable\\cache\\raw.githubusercontent.com\\ambiot\\ambpro2_arduino\\dev\\Arduino_package\\package_realtek_amebapro2_early_index.json",
+    "eTag" : "bd21a7168d03a732f471bbe1e381c87896c5459200dc7aa0c0301856edfe9594",
+    "md5" : "MD5:3b4ada30caa114f2dee0371d4d0cee62",
+    "createdAt" : "2025-11-11T11:15:20.049",
+    "cacheControl" : {
+      "maxAge" : 300,
+      "mustRevalidate" : false,
+      "noStore" : false,
+      "noCache" : false
+    },
+    "expires" : "2025-11-11T11:20:20.049"
+  }, {
+    "remoteURL" : "https://downloads.arduino.cc/libraries/library_index.json.gz",
+    "localPath" : "C:\\BlocklyduinoF2\\arduino-1.8.19\\portable\\cache\\downloads.arduino.cc\\libraries\\library_index.json.gz",
+    "eTag" : "1b794cae85ac2f045f891e5ac8af5ad6",
+    "md5" : "MD5:1b794cae85ac2f045f891e5ac8af5ad6",
+    "createdAt" : "2025-11-11T11:35:35.851",
+    "cacheControl" : {
+      "maxAge" : -1,
+      "mustRevalidate" : false,
+      "noStore" : false,
+      "noCache" : false
+    },
+    "expires" : "2025-11-11T11:35:34.851"
+  }, {
+    "remoteURL" : "https://downloads.arduino.cc/libraries/library_index.json.sig",
+    "localPath" : "C:\\BlocklyduinoF2\\arduino-1.8.19\\portable\\cache\\downloads.arduino.cc\\libraries\\library_index.json.sig",
+    "eTag" : "4587ed51bda1bedb6155855e2c49dbe4",
+    "md5" : "MD5:4587ed51bda1bedb6155855e2c49dbe4",
+    "createdAt" : "2025-11-11T11:35:36.311",
+    "cacheControl" : {
+      "maxAge" : -1,
+      "mustRevalidate" : false,
+      "noStore" : false,
+      "noCache" : false
+    },
+    "expires" : "2025-11-11T11:35:35.311"
+  }, {
+    "remoteURL" : "https://raw.githubusercontent.com/ricardoquesada/esp32-arduino-lib-builder/master/bluepad32_files/package_esp32_bluepad32_index.json",
+    "localPath" : "C:\\BlocklyduinoF2\\arduino-1.8.19\\portable\\cache\\raw.githubusercontent.com\\ricardoquesada\\esp32-arduino-lib-builder\\master\\bluepad32_files\\package_esp32_bluepad32_index.json",
+    "eTag" : "7bd9e8b4849ff835f20ae94179f0f35d0164bafd1b926529c9f91ab4c318917c",
+    "md5" : "MD5:d8d2da8a7531ffa1e7e4894fb168417c",
+    "createdAt" : "2025-11-11T11:15:20.425",
+    "cacheControl" : {
+      "maxAge" : 300,
+      "mustRevalidate" : false,
+      "noStore" : false,
+      "noCache" : false
+    },
+    "expires" : "2025-11-11T11:20:20.425"
+  }, {
+    "remoteURL" : "https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json",
+    "localPath" : "C:\\BlocklyduinoF2\\arduino-1.8.19\\portable\\cache\\raw.githubusercontent.com\\espressif\\arduino-esp32\\gh-pages\\package_esp32_index.json",
+    "eTag" : "3fdc1d24b5655168e2ad9a0057db295dcf3bb1872ec2bca7b6ab932dbc1eec11",
+    "md5" : "MD5:1dc958e390483ab6066d1747439e6b54",
+    "createdAt" : "2025-11-11T11:15:20.122",
+    "cacheControl" : {
+      "maxAge" : 300,
+      "mustRevalidate" : false,
+      "noStore" : false,
+      "noCache" : false
+    },
+    "expires" : "2025-11-11T11:20:20.122"
+  } ]
+}

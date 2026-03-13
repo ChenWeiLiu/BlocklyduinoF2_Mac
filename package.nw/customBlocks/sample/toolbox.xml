@@ -1,0 +1,14 @@
+<category id="category_custom" name="%{BKY_MYBLOCKS}" colour="%{BKY_MYBLOCKS_HUE}">
+	<block type="test">
+		<value name="pin">
+			<shadow type="math_number">
+				<field name="NUM">2</field>
+			</shadow>
+		</value>
+		<value name="val">
+			<shadow type="math_number">
+				<field name="NUM">0</field>
+			</shadow>
+		</value>
+	</block>
+</category>

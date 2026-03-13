@@ -1,0 +1,36 @@
+Step 1:
+
+Download Blocklyduino V3 (Made by MediaTek Inc. Taiwan)
+
+https://github.com/MediaTek-Labs/BlocklyDuino-for-LinkIt/releases/tag/3.0.312b
+
+
+Step 2:
+
+Download Update-Package F1 for v3 (Made by Chungyi Fu, Taiwan)
+
+https://drive.google.com/drive/folders/1QR7MeTkdAJ1q2ahYAp3NV6c385t3ZIKk?usp=sharing
+
+
+Step 3:
+
+Start BlocklyDuino\arduino-1.8.5\arduino.exe
+Import Arduino core for your boards and libraries and compile your code once in Arduino IDE, then you can upload your code to the board from BlocklyDuino F1.
+
+
+Step 4:
+
+You can manage the custom blocks.
+BlocklyduinoF1\package.nw\customBlocks\
+
+
+Step 5:
+
+You can change the board list.
+BlocklyduinoF1\package.nw\board\
+
+
+Coding is fun.
+https://www.facebook.com/francefu/
+https://github.com/fustyles
+

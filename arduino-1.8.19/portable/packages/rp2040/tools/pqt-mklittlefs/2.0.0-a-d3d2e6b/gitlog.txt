@@ -1,0 +1,7 @@
+binutils-gdb-gnu:binutils-2_38
+gcc-gnu:releases/gcc-12.3.0
+mklittlefs:3.1.0
+newlib:newlib-4.0.0
+openocd:4d87f6dca
+pico-sdk:1.5.1
+picotool:1.1.2

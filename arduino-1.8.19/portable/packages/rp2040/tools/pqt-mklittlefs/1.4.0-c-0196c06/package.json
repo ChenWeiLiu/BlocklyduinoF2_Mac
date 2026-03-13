@@ -1,0 +1,7 @@
+{
+   "description": "littlefs-utility",
+   "name": "tool-mklittlefs-rp2040-earlephilhower",
+   "system": [ "windows_x86" ],
+   "url": "https://github.com/earlephilhower/pico-quick-toolchain",
+   "version": "5.100300.220714"
+}

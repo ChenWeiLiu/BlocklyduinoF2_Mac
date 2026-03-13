@@ -1,0 +1,25 @@
+C:\BlocklyduinoF1\build\tmp\core\variant_delay.c.o: \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\variants\linkit_7697\variant_delay.c \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\variants\linkit_7697\adapter_layer.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/kernel/rtos/FreeRTOS/Source/include/FreeRTOS.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\variants\linkit_7697/FreeRTOSConfig.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/kernel/service/inc/os_port_callback.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/kernel/service/inc/os_trace_callback.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/kernel/service/inc/syslog.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/driver/chip/inc/hal_uart.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/driver/chip/mt7687/inc/hal_platform.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/driver/chip/inc/hal_define.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\variants\linkit_7697/hal_feature_config.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/driver/CMSIS/Device/MTK/mt7687/Include/mt7687.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/driver/CMSIS/Include/core_cm4.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/driver/CMSIS/Include/core_cmInstr.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/driver/CMSIS/Include/core_cmFunc.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/driver/CMSIS/Include/core_cmSimd.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/driver/CMSIS/Device/MTK/mt7687/Include/system_mt7687.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/kernel/rtos/FreeRTOS/Source/include/projdefs.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/kernel/rtos/FreeRTOS/Source/include/portable.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/kernel/rtos/FreeRTOS/Source/include/deprecated_definitions.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/kernel/rtos/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/kernel/rtos/FreeRTOS/Source/include/mpu_wrappers.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/kernel/rtos/FreeRTOS/Source/include/task.h \
+ C:\BlocklyduinoF1\arduino-1.8.5\portable\packages\LinkIt\hardware\linkit_rtos\0.10.18\system/linkit_7697/src/kernel/rtos/FreeRTOS/Source/include/list.h

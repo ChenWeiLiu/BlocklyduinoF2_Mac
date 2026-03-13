@@ -1,0 +1,19 @@
+{
+  "name": "BlocklyDuino",
+  "main": "package.nw/main.html",
+  "dependencies": {
+    "fs-extra": "^5.0.0",
+    "iconv-lite": "^0.4.19"
+  },
+  "window": {
+    "toolbar": false,
+    "fullscreen": false,
+    "resizable": true,
+    "width": 1024,
+    "height": 768,
+    "icon": "package.nw/media/icon_128.png"
+  },
+  "devDependencies": {
+    "nw": "^0.109.0"
+  }
+}

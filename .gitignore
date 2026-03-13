@@ -1,0 +1,12 @@
+# Node modules
+node_modules/
+
+# Arduino staging packages (large downloadable archives)
+arduino-1.8.19/portable/staging/
+
+# Large Windows DLL
+nw.dll
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,10 @@
+{
+  "builtInLibrariesFolders": "C:\\BlocklyduinoF1\\arduino-1.8.5\\libraries",
+  "customBuildProperties": "build.path=build/tmp/,build.warn_data_percentage=75,runtime.tools.arm-none-eabi-gcc.path=C:\\BlocklyduinoF1\\arduino-1.8.5\\portable\\packages\\arduino\\tools\\arm-none-eabi-gcc\\4.8.3-2014q1,runtime.tools.flash_tool.path=C:\\BlocklyduinoF1\\arduino-1.8.5\\portable\\packages\\LinkIt\\tools\\flash_tool\\1.4.4",
+  "fqbn": "LinkIt:linkit_rtos:linkit_7697",
+  "hardwareFolders": "C:\\BlocklyduinoF1\\arduino-1.8.5\\hardware,C:\\BlocklyduinoF1\\arduino-1.8.5\\portable\\packages",
+  "otherLibrariesFolders": "C:\\BlocklyduinoF1\\arduino-1.8.5\\portable\\sketchbook\\libraries",
+  "runtime.ide.version": "10805",
+  "sketchLocation": "C:\\BlocklyduinoF1\\sketches\\tmp\\tmp.ino",
+  "toolsFolders": "C:\\BlocklyduinoF1\\arduino-1.8.5\\tools-builder,C:\\BlocklyduinoF1\\arduino-1.8.5\\portable\\packages"
+}
