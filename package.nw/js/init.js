@@ -15,6 +15,11 @@ SPDX-License-Identifier: Apache-2.0
 
 'use strict';
 
+// Apply platform-specific layout fixes for NW.js runtime.
+if (typeof process !== 'undefined' && process.platform === 'darwin') {
+	document.documentElement.classList.add('platform-macos');
+}
+
 var TABS_ = ['blocks', 'arduino', 'xml'];
 var selected = 'blocks';
 var chosenEntry = null;

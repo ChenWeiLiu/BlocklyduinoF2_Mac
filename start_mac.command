@@ -26,6 +26,10 @@ fi
 
 echo "🚀 啟動 BlocklyduinoF2..."
 
+# 關閉殘留 NW.js 行程，避免舊快取/舊狀態影響本次啟動
+pkill -f 'nwjs.app/Contents/MacOS/nwjs' 2>/dev/null || pkill -f nwjs 2>/dev/null || true
+sleep 1
+
 # 啟動 NW.js 應用程式（每次啟動都清除快取與使用者資料）
 rm -rf "$SCRIPT_DIR/.nw-user-data" 2>/dev/null || true
 mkdir -p "$SCRIPT_DIR/.nw-user-data"

@@ -195,6 +195,24 @@ nav .brand-logo{
   margin-left: 20px;
 }
 
+html.platform-macos nav .brand-logo {
+  display: flex;
+  align-items: center;
+  height: 64px;
+  line-height: 64px;
+}
+
+html.platform-macos nav .brand-logo img {
+  height: 40px !important;
+  width: auto;
+  margin-right: 12px !important;
+  vertical-align: middle;
+}
+
+html.platform-macos table#main {
+  padding-top: 0;
+}
+
 td.tabon,
 .blocklyToolboxDiv {
   background-color: rgba(82, 183, 86, 0.5) !important;

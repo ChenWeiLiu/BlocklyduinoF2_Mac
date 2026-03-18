@@ -185,6 +185,12 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#button_export').addEventListener("click", function(evt) {
     export_xml();
   });
+
+  document.querySelector('#dialog_export_ok').addEventListener("click", function(evt) {
+    if (typeof downloadExportXml === 'function') {
+      downloadExportXml();
+    }
+  });
   
   document.querySelector('#button_copycode').addEventListener("click", function(evt) {
 	  var text = document.getElementById('terminal-body').innerText;
@@ -199,6 +205,9 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#button_save').addEventListener("click", handleSaveButton);
   document.querySelector('#button_save_as').addEventListener("click", function(evt) {
     setFile(null, false);
+    if (typeof resetNodeSaveTarget === 'function') {
+      resetNodeSaveTarget();
+    }
     handleSaveButton();
   });
   

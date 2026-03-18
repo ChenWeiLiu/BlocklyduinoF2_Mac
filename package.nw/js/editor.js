@@ -3,6 +3,10 @@ var fileEntry;
 var Entryflg;
 var hasWriteAccess;
 var timer1;
+var nodeSaveDirPath = null;
+var nodeProjectName = null;
+var fs = require('fs-extra');
+var path = require('path');
 
 function errorHandler(e) {
   var msg = "";
@@ -71,6 +75,142 @@ function setFile(theFileEntry, isWritable) {
   hasWriteAccess = isWritable;
 }
 
+function supportsChromeFileSystem() {
+  return typeof chrome !== 'undefined' &&
+    chrome.fileSystem &&
+    typeof chrome.fileSystem.chooseEntry === 'function';
+}
+
+function useNodeFileSystem() {
+  return (typeof process !== 'undefined' && process.platform === 'darwin') ||
+    !supportsChromeFileSystem();
+}
+
+function chooseDirectoryNode(callback) {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.setAttribute('nwdirectory', '');
+  input.style.display = 'none';
+  input.addEventListener('change', function () {
+    var dirPath = null;
+    if (input.files && input.files[0] && input.files[0].path) {
+      dirPath = input.files[0].path;
+    } else if (input.value) {
+      dirPath = input.value;
+    }
+    if (input.parentNode) {
+      input.parentNode.removeChild(input);
+    }
+    callback(dirPath);
+  });
+  document.body.appendChild(input);
+  input.click();
+}
+
+function chooseSaveFileNode(defaultName, callback) {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.setAttribute('nwsaveas', defaultName || 'project.xml');
+  input.setAttribute('accept', '.xml');
+  input.style.display = 'none';
+  input.addEventListener('change', function () {
+    var filePath = null;
+    if (input.files && input.files[0] && input.files[0].path) {
+      filePath = input.files[0].path;
+    } else if (input.value) {
+      filePath = input.value;
+    }
+    if (input.parentNode) {
+      input.parentNode.removeChild(input);
+    }
+    callback(filePath);
+  });
+  document.body.appendChild(input);
+  input.click();
+}
+
+function getWorkspaceXmlText() {
+  var xmlDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+  var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
+  var board = document.getElementById('board-selector');
+  if (board && board.options && board.selectedIndex >= 0) {
+    xmlText = xmlText.replace('xmlns', 'version="F2" board="' +
+      board.options[board.selectedIndex].text + '" xmlns');
+  }
+  return xmlText;
+}
+
+function downloadExportXml() {
+  var xmlText = $('#textarea_export').val() || '';
+  if (!xmlText.trim()) {
+    Materialize.toast(Blockly.Msg.ERROR_FILENAME, 2500);
+    return;
+  }
+
+  if (useNodeFileSystem()) {
+    var defaultName = (nodeProjectName || 'project') + '.xml';
+    chooseSaveFileNode(defaultName, function (filePath) {
+      if (!filePath) {
+        Materialize.toast('Please choose a file path', 2500);
+        return;
+      }
+      if (!/\.xml$/i.test(filePath)) {
+        filePath += '.xml';
+      }
+      try {
+        fs.writeFileSync(filePath, xmlText, 'utf8');
+        Materialize.toast(Blockly.Msg.POPUP_SAVE_DONE, 2500);
+      } catch (err) {
+        console.log(err);
+        Materialize.toast('Download failed', 2500);
+      }
+    });
+    return;
+  }
+
+  var blob = new Blob([xmlText], { type: 'text/xml;charset=utf-8' });
+  var link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = (nodeProjectName || 'project') + '.xml';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function saveFilesNode(filename) {
+  filename = filename.replace(/[^a-zA-Z0-9]+/ig, '_');
+  if (!nodeSaveDirPath) {
+    Materialize.toast(Blockly.Msg.ERROR_FILENAME, 4000);
+    return;
+  }
+
+  var projectDir = path.join(nodeSaveDirPath, filename);
+  fs.ensureDirSync(projectDir);
+  fs.writeFileSync(path.join(projectDir, filename + '.ino'),
+    Blockly.Arduino.workspaceToCode());
+  fs.writeFileSync(path.join(projectDir, filename + '.xml'),
+    getWorkspaceXmlText());
+
+  nodeProjectName = filename;
+  Entryflg = 2;
+  hasWriteAccess = true;
+  handleDocumentChange(filename + '.ino');
+  Materialize.toast(Blockly.Msg.POPUP_SAVE_DONE, 4000);
+}
+
+function saveCurrentNodeProject() {
+  if (!nodeSaveDirPath || !nodeProjectName) {
+    return false;
+  }
+  saveFilesNode(nodeProjectName);
+  return true;
+}
+
+function resetNodeSaveTarget() {
+  nodeSaveDirPath = null;
+  nodeProjectName = null;
+}
+
 function readFileIntoEditor(theFileEntry) {
   var filepath = "";
 
@@ -94,50 +234,71 @@ function readFileIntoEditor(theFileEntry) {
   }, errorHandler);
 }
 
-function writeXmlContent(theFileEntry, filepath) {
+function loadWorkspaceFromXmlText(xmlText) {
   Blockly.mainWorkspace.clear();
+  Materialize.toast(Blockly.Msg.POPUP_LOADING || 'Loading...', 2000);
 
-  // 顯示載入提示
-  Materialize.toast(Blockly.Msg.POPUP_LOADING || '載入中...', 2000);
+  var xmlDoc = Blockly.Xml.textToDom(xmlText);
+  window.isLoadingFile = true;
+  Blockly.Events.disable();
+  if (Blockly.mainWorkspace.setResizesEnabled) {
+    Blockly.mainWorkspace.setResizesEnabled(false);
+  }
 
+  try {
+    Blockly.Xml.domToWorkspace(xmlDoc, Blockly.mainWorkspace);
+  } finally {
+    Blockly.Events.enable();
+    if (Blockly.mainWorkspace.setResizesEnabled) {
+      Blockly.mainWorkspace.setResizesEnabled(true);
+    }
+    Blockly.svgResize(Blockly.mainWorkspace);
+    setTimeout(function () {
+      window.isLoadingFile = false;
+    }, 500);
+  }
+}
+
+function openNodeProject(dirPath) {
+  try {
+    var entries = fs.readdirSync(dirPath);
+    var xmlFiles = entries.filter(function (name) {
+      return /\.xml$/i.test(name);
+    }).sort();
+    if (!xmlFiles.length) {
+      Materialize.toast(Blockly.Msg.DIALOG3_TITLE, 4000);
+      newFile();
+      return;
+    }
+
+    var folderName = path.basename(dirPath);
+    var preferredXml = folderName + '.xml';
+    var xmlFileName = xmlFiles.indexOf(preferredXml) >= 0 ? preferredXml : xmlFiles[0];
+    var xmlPath = path.join(dirPath, xmlFileName);
+    var xmlText = fs.readFileSync(xmlPath, 'utf8');
+
+    loadWorkspaceFromXmlText(xmlText);
+
+    var projectName = xmlFileName.replace(/\.xml$/i, '');
+    nodeSaveDirPath = path.dirname(dirPath);
+    nodeProjectName = projectName;
+    fileEntry = null;
+    hasWriteAccess = true;
+    Entryflg = 2;
+    handleDocumentChange(projectName + '.ino');
+  } catch (err) {
+    console.log(err);
+    Materialize.toast('Open project failed', 3000);
+  }
+}
+
+function writeXmlContent(theFileEntry, filepath) {
   //open xml file and write xml_textarea
   theFileEntry.getFile(filepath, {}, function (fileEntry) {
     fileEntry.file(function (file) {
       var reader = new FileReader();
       reader.onloadend = function (e) {
-        var xmlDoc = Blockly.Xml.textToDom(this.result);
-
-        // 效能優化：設定全域載入標記，讓 onBlocksChange 跳過處理
-        window.isLoadingFile = true;
-
-        // 效能優化：完全關閉 Blockly 事件系統，避免每個積木建立時觸發數十個事件監聽器
-        Blockly.Events.disable();
-
-        // 效能優化：暫時禁用自動調整
-        if (Blockly.mainWorkspace.setResizesEnabled) {
-          Blockly.mainWorkspace.setResizesEnabled(false);
-        }
-
-        try {
-          Blockly.Xml.domToWorkspace(xmlDoc, Blockly.mainWorkspace);
-        } finally {
-          // 恢復 Blockly 事件系統
-          Blockly.Events.enable();
-
-          // 恢復自動調整
-          if (Blockly.mainWorkspace.setResizesEnabled) {
-            Blockly.mainWorkspace.setResizesEnabled(true);
-          }
-          // 手動觸發一次調整
-          Blockly.svgResize(Blockly.mainWorkspace);
-
-          // 延遲恢復事件處理，讓積木完全初始化
-          setTimeout(function () {
-            window.isLoadingFile = false;
-          }, 500);
-        }
-
-        //xmlTextarea.value = this.result;
+        loadWorkspaceFromXmlText(this.result);
       };
       reader.readAsText(file);
     }, errorHandler);
@@ -180,14 +341,37 @@ var onChosenFileToSave = function (theFileEntry) {
 };
 
 function handleOpenButton() {
-  chrome.fileSystem.chooseEntry({
-    type: 'openDirectory'
-  }, onWritableFileToOpen);
+  if (!useNodeFileSystem()) {
+    chrome.fileSystem.chooseEntry({
+      type: 'openDirectory'
+    }, onWritableFileToOpen);
+  } else {
+    chooseDirectoryNode(function (dirPath) {
+      if (dirPath) {
+        openNodeProject(dirPath);
+      }
+    });
+  }
 }
 
 function handleSaveButton() {
   var filename;
   var blob;
+  if (useNodeFileSystem()) {
+    if (saveCurrentNodeProject()) {
+      return;
+    }
+    chooseDirectoryNode(function (dirPath) {
+      if (!dirPath) {
+        Materialize.toast('Please choose a folder', 2500);
+        return;
+      }
+      nodeSaveDirPath = dirPath;
+      $('#modal2').openModal();
+    });
+    return;
+  }
+
   if (fileEntry && hasWriteAccess) {
     if (Entryflg == 1) {
       filename = fileEntry.name + '.ino';
@@ -231,6 +415,11 @@ function set_variable() {
 
 function saveFiles(filename) {
   filename = filename.replace(/[^a-zA-Z0-9]+/ig, '_');
+  if (useNodeFileSystem()) {
+    saveFilesNode(filename);
+    return;
+  }
+
   var blob;
   setFile(fileEntry, true);
   Entryflg = 2;
