@@ -1,5 +1,115 @@
 "user strict"
 
+function getPopupAppRootDir() {
+	try {
+		if (typeof process !== 'undefined' && process.cwd) {
+			return process.cwd();
+		}
+	} catch (e) {}
+	try {
+		if (typeof nw !== 'undefined' && nw.App && nw.App.startPath) {
+			return nw.App.startPath;
+		}
+	} catch (e2) {}
+	return '.';
+}
+
+function getBundledChromeTarget() {
+	if (typeof require === 'undefined') {
+		return null;
+	}
+	var fs = require('fs');
+	var path = require('path');
+	var root = getPopupAppRootDir();
+	var platform = (typeof process !== 'undefined' && process.platform) ? process.platform : '';
+	var executableCandidates = [];
+	var appBundleCandidates = [];
+
+	if (platform === 'win32') {
+		executableCandidates = [
+			path.join(root, 'chrome.exe'),
+			path.join(root, 'chrome', 'chrome.exe'),
+			path.join(root, 'browser', 'chrome.exe'),
+			path.join(root, 'browser', 'chrome', 'chrome.exe'),
+			path.join(root, 'chrome-win64', 'chrome.exe'),
+			path.join(root, 'chrome-win32', 'chrome.exe')
+		];
+	} else if (platform === 'darwin') {
+		executableCandidates = [
+			path.join(root, 'Google Chrome.app', 'Contents', 'MacOS', 'Google Chrome'),
+			path.join(root, 'Google Chrome for Testing.app', 'Contents', 'MacOS', 'Google Chrome for Testing'),
+			path.join(root, 'chrome', 'Google Chrome.app', 'Contents', 'MacOS', 'Google Chrome'),
+			path.join(root, 'chrome', 'Google Chrome for Testing.app', 'Contents', 'MacOS', 'Google Chrome for Testing')
+		];
+		appBundleCandidates = [
+			path.join(root, 'Google Chrome.app'),
+			path.join(root, 'Google Chrome for Testing.app'),
+			path.join(root, 'chrome', 'Google Chrome.app'),
+			path.join(root, 'chrome', 'Google Chrome for Testing.app')
+		];
+	} else {
+		executableCandidates = [
+			path.join(root, 'chrome'),
+			path.join(root, 'chrome', 'chrome'),
+			path.join(root, 'browser', 'chrome'),
+			path.join(root, 'chrome-linux64', 'chrome'),
+			path.join(root, 'chrome-linux', 'chrome')
+		];
+	}
+
+	for (var i = 0; i < executableCandidates.length; i++) {
+		if (fs.existsSync(executableCandidates[i])) {
+			return { type: 'exec', target: executableCandidates[i] };
+		}
+	}
+
+	for (var j = 0; j < appBundleCandidates.length; j++) {
+		if (fs.existsSync(appBundleCandidates[j])) {
+			return { type: 'app', target: appBundleCandidates[j] };
+		}
+	}
+
+	return null;
+}
+
+function openUrlPreferBundledChrome(url) {
+	if (typeof nw === 'undefined') {
+		window.open(url);
+		return;
+	}
+
+	if (typeof require === 'undefined') {
+		nw.Shell.openExternal(url);
+		return;
+	}
+
+	var childProcess = require('child_process');
+	var platform = (typeof process !== 'undefined' && process.platform) ? process.platform : '';
+	var chromeTarget = getBundledChromeTarget();
+
+	if (!chromeTarget) {
+		nw.Shell.openExternal(url);
+		return;
+	}
+
+	if (chromeTarget.type === 'app' && platform === 'darwin') {
+		childProcess.execFile('open', ['-na', chromeTarget.target, '--args', url], function(error) {
+			if (error) {
+				console.error(error);
+				nw.Shell.openExternal(url);
+			}
+		});
+		return;
+	}
+
+	childProcess.execFile(chromeTarget.target, [url], function(error) {
+		if (error) {
+			console.error(error);
+			nw.Shell.openExternal(url);
+		}
+	});
+}
+
 document.addEventListener('DOMContentLoaded', function() {
 	$.ajax({
 		type: "GET" ,
@@ -218,10 +328,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   //Web Serial
   document.getElementById('button_webSerial').addEventListener("click", function(evt) {
-	if (typeof nw !== "undefined")
-		nw.Shell.openExternal("https://fustyles.github.io/webduino/WebSerial.html")
-	else
-		window.open("https://fustyles.github.io/webduino/WebSerial.html")
+	openUrlPreferBundledChrome("https://fustyles.github.io/webduino/WebSerial.html");
   });  
   
   //Web Bluetooth

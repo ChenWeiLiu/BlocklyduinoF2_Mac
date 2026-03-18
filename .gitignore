@@ -2,6 +2,7 @@
 node_modules/
 .nw-user-data/
 .toolchain/
+chrome/
 
 # Arduino staging packages (large downloadable archives)
 arduino-1.8.19/portable/staging/
