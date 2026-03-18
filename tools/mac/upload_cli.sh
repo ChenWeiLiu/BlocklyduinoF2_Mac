@@ -12,6 +12,7 @@ PY_ENV_DIR="$ROOT_DIR/.toolchain/py"
 PY_BIN="$PY_ENV_DIR/bin/python"
 XATTR_BIN="/usr/bin/xattr"
 CODESIGN_BIN="/usr/bin/codesign"
+GATEKEEPER_STAMP_FILE="$TOOLCHAIN_DATA_DIR/.gatekeeper_fix_stamp"
 
 BOARD=""
 PORT=""
@@ -175,6 +176,31 @@ verify_esptool_runnable() {
   fi
 }
 
+needs_full_gatekeeper_fix() {
+  local stamp_core="$1"
+  if [ ! -f "$GATEKEEPER_STAMP_FILE" ]; then
+    return 0
+  fi
+  if [ "$(cat "$GATEKEEPER_STAMP_FILE" 2>/dev/null || true)" != "$stamp_core" ]; then
+    return 0
+  fi
+  return 1
+}
+
+mark_gatekeeper_fixed() {
+  local stamp_core="$1"
+  mkdir -p "$(dirname "$GATEKEEPER_STAMP_FILE")"
+  echo "$stamp_core" > "$GATEKEEPER_STAMP_FILE"
+}
+
+run_full_gatekeeper_fix() {
+  local stamp_core="$1"
+  echo "Applying macOS Gatekeeper fix..."
+  clear_gatekeeper_quarantine
+  adhoc_sign_local_binaries
+  mark_gatekeeper_fixed "$stamp_core"
+}
+
 echo "[V12-CLI] starting local toolchain upload"
 echo "Board: $BOARD"
 echo "Port: $PORT"
@@ -185,24 +211,38 @@ if [ -z "$core_version" ]; then
   echo "ESP32 core missing, installing $ESP32_CORE_VERSION ..."
   "${CLI_CMD[@]}" core update-index
   "${CLI_CMD[@]}" core install "esp32:esp32@$ESP32_CORE_VERSION"
-  clear_gatekeeper_quarantine
   core_version="$ESP32_CORE_VERSION"
 fi
 echo "Core esp32:esp32 version: $core_version"
-echo "Applying macOS Gatekeeper fix..."
-clear_gatekeeper_quarantine
-adhoc_sign_local_binaries
+if needs_full_gatekeeper_fix "$core_version"; then
+  run_full_gatekeeper_fix "$core_version"
+else
+  echo "Applying macOS Gatekeeper fix... (cached, skip full scan)"
+fi
 if ! verify_esptool_runnable; then
-  echo "Please run: ./tools/mac/install_toolchain.sh"
-  exit 4
+  run_full_gatekeeper_fix "$core_version"
+  verify_esptool_runnable || {
+    echo "Please run: ./tools/mac/install_toolchain.sh"
+    exit 4
+  }
 fi
 if ! verify_compiler_runnable; then
-  echo "Please run: ./tools/mac/install_toolchain.sh"
-  exit 5
+  run_full_gatekeeper_fix "$core_version"
+  verify_compiler_runnable || {
+    echo "Please run: ./tools/mac/install_toolchain.sh"
+    exit 5
+  }
 fi
 
 echo "[2/4] Compiling with arduino-cli..."
-"${CLI_CMD[@]}" compile --fqbn "$BOARD" --build-path "$BUILD_PATH" "$SKETCH_DIR"
+if ! "${CLI_CMD[@]}" compile --fqbn "$BOARD" --build-path "$BUILD_PATH" "$SKETCH_DIR"; then
+  echo "[WARN] Compile failed, retrying after full Gatekeeper fix..."
+  run_full_gatekeeper_fix "$core_version"
+  "${CLI_CMD[@]}" compile --fqbn "$BOARD" --build-path "$BUILD_PATH" "$SKETCH_DIR" || {
+    echo "Please run: ./tools/mac/install_toolchain.sh"
+    exit 6
+  }
+fi
 
 echo "[3/4] Uploading with arduino-cli..."
 "${CLI_CMD[@]}" upload --fqbn "$BOARD" -p "$PORT" --input-dir "$BUILD_PATH" --upload-property "upload.speed=$ESP32_UPLOAD_BAUD" "$SKETCH_DIR"

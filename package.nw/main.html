@@ -317,7 +317,9 @@ SPDX-License-Identifier: Apache-2.0
 				for (var i=0;i<dropdown.options.length;i++) {
 					document.write("<li><a onclick=\"dropdownSetValue(dropdown,'"+dropdown.options[i].innerText+"',span);selectBoard('"+dropdown.options[i].innerText+"');\">"+dropdown.options[i].innerText+"</a></li><li class='divider'>");
 				}
-				dropdownSetValue(dropdown,dropdown.options[0].value,span);
+				if (span && (!span.textContent || span.textContent.indexOf('BOARD?') === 0)) {
+					dropdownSetValue(dropdown.options[0].innerText);
+				}
 			}
 		</script>	
 	</ul>

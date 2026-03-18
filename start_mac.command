@@ -30,9 +30,21 @@ echo "🚀 啟動 BlocklyduinoF2..."
 pkill -f 'nwjs.app/Contents/MacOS/nwjs' 2>/dev/null || pkill -f nwjs 2>/dev/null || true
 sleep 1
 
-# 啟動 NW.js 應用程式（每次啟動都清除快取與使用者資料）
-rm -rf "$SCRIPT_DIR/.nw-user-data" 2>/dev/null || true
-mkdir -p "$SCRIPT_DIR/.nw-user-data"
+# 啟動 NW.js 應用程式（每次啟動清快取，但保留使用者設定）
+NW_USER_DATA_DIR="$SCRIPT_DIR/.nw-user-data"
+mkdir -p "$NW_USER_DATA_DIR"
+for cache_dir in \
+    "$NW_USER_DATA_DIR/Default/Cache" \
+    "$NW_USER_DATA_DIR/Default/Code Cache" \
+    "$NW_USER_DATA_DIR/Default/GPUCache" \
+    "$NW_USER_DATA_DIR/Default/Network/Cache" \
+    "$NW_USER_DATA_DIR/Default/Service Worker/CacheStorage" \
+    "$NW_USER_DATA_DIR/Default/Service Worker/ScriptCache" \
+    "$NW_USER_DATA_DIR/ShaderCache" \
+    "$NW_USER_DATA_DIR/GrShaderCache" \
+    "$NW_USER_DATA_DIR/GraphiteDawnCache"; do
+    rm -rf "$cache_dir" 2>/dev/null || true
+done
 NW_APP="$SCRIPT_DIR/node_modules/nw/nwjs-v0.109.0-osx-arm64/nwjs.app"
 if [ ! -d "$NW_APP" ]; then
     echo "⚠️  找不到 NW.js app，重新安裝..."
@@ -54,7 +66,7 @@ fi
 open -na "$NW_APP" --args \
     "$SCRIPT_DIR" \
     "--disable-http-cache" \
-    "--user-data-dir=$SCRIPT_DIR/.nw-user-data"
+    "--user-data-dir=$NW_USER_DATA_DIR"
 
 # 等待一下讓應用程式啟動
 sleep 3

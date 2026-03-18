@@ -152,16 +152,67 @@ function handleUploadButton() {
 	});
 }
 
-function openArduinoIDE() {
-	// check if user has saved the INO file
-	if (!fileEntry) {
-		Materialize.toast(
-			Blockly.Msg.SAVE_FIRST, 4000)  // 4000 is the duration of the toast
-		return
+function getNodeInoPath() {
+	if (!nodeSaveDirPath || !nodeProjectName) {
+		return null;
+	}
+	return path.join(nodeSaveDirPath, nodeProjectName, nodeProjectName + '.ino');
+}
+
+function launchArduinoIDEWithPath(inoPath) {
+	if (!inoPath) {
+		Materialize.toast(Blockly.Msg.SAVE_FIRST, 4000);
+		return;
 	}
 
-	// Open the INO file with Arduino.exe
+	if (os.platform() === 'darwin') {
+		execFile('open', ['-a', 'Arduino IDE', inoPath], function (err) {
+			if (!err) return;
+			execFile('open', ['-a', 'Arduino', inoPath], function (err2) {
+				if (!err2) return;
+				execFile('open', [inoPath], function (err3) {
+					if (err3) {
+						console.log(err3);
+						Materialize.toast('Open Arduino IDE failed', 4000);
+					}
+				});
+			});
+		});
+		return;
+	}
+
+	console.log('arduino.exe ' + inoPath);
+	var command = '"arduino-' + arduino_ide + '\\arduino.exe"';
+	exec(command + ' "' + inoPath + '"', { encoding: 'buffer' });
+}
+
+function openArduinoIDE() {
 	closeSerialMonitor().then(function () {
+		if (typeof useNodeFileSystem === 'function' && useNodeFileSystem()) {
+			var hasNodeProject = !!(nodeSaveDirPath && nodeProjectName);
+			if (!hasNodeProject) {
+				Materialize.toast(Blockly.Msg.SAVE_FIRST, 4000);
+				return;
+			}
+			// Keep .ino in sync before launching IDE.
+			if (typeof saveCurrentNodeProject === 'function') {
+				saveCurrentNodeProject();
+			}
+			var nodeInoPath = getNodeInoPath();
+			if (!nodeInoPath || !fs.existsSync(nodeInoPath)) {
+				Materialize.toast(Blockly.Msg.SAVE_FIRST, 4000);
+				return;
+			}
+			launchArduinoIDEWithPath(nodeInoPath);
+			return;
+		}
+
+		// check if user has saved the INO file
+		if (!fileEntry) {
+			Materialize.toast(Blockly.Msg.SAVE_FIRST, 4000);
+			return;
+		}
+
 		// the "fileEntry" is actually a directly entry.
 		// so we search the INO file name within the directory entry first
 		var filename = document.getElementById('info_title').innerHTML;
@@ -182,11 +233,7 @@ function openArduinoIDE() {
 					const desktopDir = path.join(os.homedir(), "Desktop");
 					inoPath = inoPath.replace("~\\Desktop", desktopDir);
 				}
-
-				console.log('arduino.exe ' + inoPath);
-				let command = '"arduino-' + arduino_ide + '\\arduino.exe"'
-				let parameter = inoPath;
-				var process = exec(command + ' ' + parameter, { encoding: 'buffer' });
+				launchArduinoIDEWithPath(inoPath);
 			});
 		}, errorHandler);
 	});
