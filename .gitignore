@@ -1,5 +1,7 @@
 # Node modules
 node_modules/
+.nw-user-data/
+.toolchain/
 
 # Arduino staging packages (large downloadable archives)
 arduino-1.8.19/portable/staging/
@@ -10,3 +12,9 @@ nw.dll
 # OS files
 .DS_Store
 Thumbs.db
+build/tmp/
+build/tmp_py/
+sketches/tmp/
+sketches/upload_debug.log
+sketches/.esp32_gatekeeper_done
+sketches/[0-9]*/
