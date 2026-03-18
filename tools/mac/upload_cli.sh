@@ -201,6 +201,29 @@ run_full_gatekeeper_fix() {
   mark_gatekeeper_fixed "$stamp_core"
 }
 
+build_library_args() {
+  local candidates=(
+    "$ROOT_DIR/sketches/libraries"
+    "$ROOT_DIR/arduino-1.8.19/portable/sketchbook/libraries"
+    "$HOME/Documents/Arduino/libraries"
+    "$HOME/Arduino/libraries"
+  )
+  local dir
+  LIB_ARGS=()
+  for dir in "${candidates[@]}"; do
+    if [ -d "$dir" ]; then
+      LIB_ARGS+=(--libraries "$dir")
+    fi
+  done
+}
+
+is_gatekeeper_related_compile_error() {
+  local log_file="$1"
+  grep -Eiq \
+    'signal: killed|quarantine|library load disallowed|code signature|not valid for use in process|killed: 9' \
+    "$log_file"
+}
+
 echo "[V12-CLI] starting local toolchain upload"
 echo "Board: $BOARD"
 echo "Port: $PORT"
@@ -219,6 +242,13 @@ if needs_full_gatekeeper_fix "$core_version"; then
 else
   echo "Applying macOS Gatekeeper fix... (cached, skip full scan)"
 fi
+build_library_args
+if [ "${#LIB_ARGS[@]}" -gt 0 ]; then
+  echo "Library search paths:"
+  for ((i=1; i<${#LIB_ARGS[@]}; i+=2)); do
+    echo "- ${LIB_ARGS[i]}"
+  done
+fi
 if ! verify_esptool_runnable; then
   run_full_gatekeeper_fix "$core_version"
   verify_esptool_runnable || {
@@ -235,14 +265,26 @@ if ! verify_compiler_runnable; then
 fi
 
 echo "[2/4] Compiling with arduino-cli..."
-if ! "${CLI_CMD[@]}" compile --fqbn "$BOARD" --build-path "$BUILD_PATH" "$SKETCH_DIR"; then
-  echo "[WARN] Compile failed, retrying after full Gatekeeper fix..."
-  run_full_gatekeeper_fix "$core_version"
-  "${CLI_CMD[@]}" compile --fqbn "$BOARD" --build-path "$BUILD_PATH" "$SKETCH_DIR" || {
-    echo "Please run: ./tools/mac/install_toolchain.sh"
-    exit 6
-  }
+COMPILE_LOG="$(mktemp "$TMP_PY/compile.XXXXXX.log")"
+set +e
+"${CLI_CMD[@]}" compile --fqbn "$BOARD" --build-path "$BUILD_PATH" "${LIB_ARGS[@]}" "$SKETCH_DIR" 2>&1 | tee "$COMPILE_LOG"
+compile_rc=${PIPESTATUS[0]}
+set -e
+if [ "$compile_rc" -ne 0 ]; then
+  if is_gatekeeper_related_compile_error "$COMPILE_LOG"; then
+    echo "[WARN] Compile failed with Gatekeeper-like error, retrying after full fix..."
+    run_full_gatekeeper_fix "$core_version"
+    "${CLI_CMD[@]}" compile --fqbn "$BOARD" --build-path "$BUILD_PATH" "${LIB_ARGS[@]}" "$SKETCH_DIR" || {
+      echo "Please run: ./tools/mac/install_toolchain.sh"
+      rm -f "$COMPILE_LOG" 2>/dev/null || true
+      exit 6
+    }
+  else
+    rm -f "$COMPILE_LOG" 2>/dev/null || true
+    exit "$compile_rc"
+  fi
 fi
+rm -f "$COMPILE_LOG" 2>/dev/null || true
 
 echo "[3/4] Uploading with arduino-cli..."
 "${CLI_CMD[@]}" upload --fqbn "$BOARD" -p "$PORT" --input-dir "$BUILD_PATH" --upload-property "upload.speed=$ESP32_UPLOAD_BAUD" "$SKETCH_DIR"
