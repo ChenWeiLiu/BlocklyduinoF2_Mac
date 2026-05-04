@@ -1,0 +1,9 @@
+{
+  "additionalFiles": "",
+  "compiler.optimization_flags": "-Os",
+  "customBuildProperties": "",
+  "fqbn": "esp32:esp32:esp32",
+  "hardwareFolders": "/Users/white/school-develop/BlocklyduinoF2_Mac/.toolchain/data/packages/esp32/hardware/esp32/2.0.17,/Users/white/school-develop/BlocklyduinoF2_Mac/.toolchain/data/packages/esp32/hardware/esp32/2.0.17",
+  "otherLibrariesFolders": "/Users/white/school-develop/BlocklyduinoF2_Mac/sketches/libraries,/Users/white/school-develop/BlocklyduinoF2_Mac/arduino-1.8.19/portable/sketchbook/libraries,/Users/white/Documents/Arduino/libraries,/Users/white/Arduino/libraries,/Users/white/school-develop/BlocklyduinoF2_Mac/sketches/libraries",
+  "sketchLocation": "/Users/white/school-develop/BlocklyduinoF2_Mac/sketches/tmp_eval_ili9486"
+}
